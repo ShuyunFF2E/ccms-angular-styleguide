@@ -4,6 +4,8 @@
  * @since 2016-05-30
  */
 
+import {Debounce} from 'angular-es-utils/decorators'
+
 export default class CounterCtrl {
 
 	$onInit() {
@@ -14,6 +16,7 @@ export default class CounterCtrl {
 		return this.counter * this.counter;
 	}
 
+	@Debounce(100)
 	increase() {
 		this.counter++;
 	}
