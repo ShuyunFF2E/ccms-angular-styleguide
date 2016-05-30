@@ -5,75 +5,114 @@
  */
 var path = require('path');
 var webpack = require('webpack');
-var AssetsPlugin = require('assets-webpack-plugin');
-var CleanPlugin = require('clean-webpack-plugin');
-var assetsPluginInstance = new AssetsPlugin({filename: '/build/assets.json', prettyPrint: true, update: true});
+var HTMLPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer');
-var packages = require('./package.json');
 
 module.exports = {
-  devtool: 'source-map',
-  entry  : {
-    app   : './src/app/app.js',
-    vendor: Object.keys(packages.dependencies)
-  },
-  output : {
-    path      : path.join(__dirname, 'build'),
-    publicPath: 'build/',
-    filename  : '[name]-[hash:8].js'
-  },
-  plugins: [
-    new CleanPlugin('build'),
-    new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin(
-      'vendor',
-      'vendor-[hash:8].js'
-    ),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.NoErrorsPlugin(),
-    assetsPluginInstance
-  ],
-  resolve: {
-    extensions: ['', '.js', '.jsx', '.css']
-  },
-  eslint : {
-    configFile : '.eslintrc',
-    emitWarning: true,
-    emitError  : true,
-    formatter  : require('eslint-friendly-formatter')
-  },
-  postcss: [autoprefixer({browsers: ['last 2 versions']})],
-  module : {
-    preLoaders: [
-      {
-        test   : /\.jsx?$/,
-        loader : 'eslint-loader',
-        exclude: /(node_modules|src\/app\/containers)|(src\/app\/App\.jsx)/,
-        include: path.join(__dirname, 'src')
-      }
-    ],
+	devtool: 'source-map',
+	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/app.js'],
+	output: {
+		path: path.join(__dirname, 'dist'),
+		filename: '[name].js'
+	},
+	externals: {
+		'angular': 'angular',
+		'angular-resource': '\'ngResource\'',
+		'angular-ui-router': '\'ui.router\''
+	},
+	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify('production')
+			}
+		}),
+		new HTMLPlugin({
+			template: './src/index.html',
+			filename: 'index.html',
+			inject: false
+		}),
+		new webpack.optimize.UglifyJsPlugin({
+			include: /\.min\.js$/,
+			minimize: true
+		}),
+		new webpack.optimize.DedupePlugin(),
+		new webpack.NoErrorsPlugin()
+	],
+	resolve: {
+		extensions: ['', '.js']
+	},
+	eslint: {
+		configFile: '.eslintrc',
+		emitWarning: true,
+		emitError: true,
+		formatter: require('eslint-friendly-formatter')
+	},
+	postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
+	module: {
+		preLoaders: [
+			{
+				test: /\.js?$/,
+				loader: 'eslint-loader',
+				exclude: /node_modules/,
+				include: path.join(__dirname, 'src')
+			}
+		],
 
-    loaders: [
-      {
-        test   : /\.jsx?$/,
-        loaders: ['babel'],
-        exclude: /(node_modules|bower_components)/,
-        include: [path.join(__dirname, 'src')]
-      },
-      {
-        test   : /\.css$/,
-        loaders: ['style', 'css', 'postcss']
-      },
-      {
-        test   : /\.html$/,
-        loaders: ['html'],
-        exclude: /(node_modules|bower_components)/,
-        include: path.join(__dirname, 'src')
-      },
-      {
-        test   : /\.scss$/,
-        loaders: ['style', 'css', 'sass', 'postcss']
-      }
-    ]
-  }
+		loaders: [
+			{
+				test: /\.js?$/,
+				loaders: ['babel'],
+				exclude: /(node_modules|bower_components)/,
+				include: [path.join(__dirname, 'src'), path.join(__dirname, 'demo')]
+			},
+			{
+				test: /\.tpl\.html$/,
+				loader: 'html',
+				query: {interpolate: true},
+				exclude: /(node_modules|bower_components)/,
+				include: path.join(__dirname, 'src/components')
+			},
+
+			{
+				test: /.html$/,
+				loader: 'file?name=[path][name]-[hash:8].[ext]',
+				exclude: /(node_modules|bower_components)/,
+				include: path.join(__dirname, 'src/app')
+			},
+			{
+				test: /\.css$/,
+				loaders: ['style', 'css', 'postcss', 'resolve-url'],
+				exclude: /(node_modules|bower_components)/
+			},
+			{
+				test: /\.scss$/,
+				loaders: ['style', 'css', 'postcss', 'resolve-url', 'sass?sourceMap'],
+				exclude: /(node_modules|bower_components)/
+			},
+			{
+				test: /\.(jpe?g|png|gif)$/i,
+				loaders: [
+					'file?hash=sha512&digest=hex&name=[hash:8].[ext]',
+					'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+				]
+			},
+			{
+				test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+				loader: 'url?limit=15000&mimetype=application/font-woff&prefix=fonts'
+			},
+			{
+				test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+				loader: 'url?limit=15000&mimetype=application/octet-stream&prefix=fonts'
+			},
+			{
+				test: /\.eot(\?#\w+)?$/,
+				loader: 'url?limit=15000&mimetype=application/vnd.ms-fontobject&prefix=fonts'
+			},
+			{
+				test: /\.svg(#\w+)?$/,
+				loader: 'url?limit=15000&mimetype=image/svg+xml&prefix=fonts'
+			}
+
+		]
+	}
 };

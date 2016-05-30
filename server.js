@@ -13,8 +13,6 @@ var config = require('./webpack-dev.config');
 var app = jsonServer.create();
 var compiler = webpack(config);
 
-var apiPrefix = '';
-var filename = process.cwd() + '/src/mock/db.json';
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo    : false,
@@ -26,8 +24,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 
 app.use(require('webpack-hot-middleware')(compiler));
-app.use(jsonServer.defaults({static: process.cwd() + '/'}));
-app.use(jsonServer.router(apiPrefix, filename));
 
 app.listen(3000, 'localhost', function (err) {
   if (err) {

@@ -1,33 +1,32 @@
 /**
  * @author Kuitos
  * @homepage https://github.com/kuitos/
- * @since 2015-12-23
+ * @since 2016-01-19
  */
-
 import angular from 'angular';
-import services from '../common/services';
-import filters from '../common/filters';
-import components from '../common/components';
+import uiRouter from 'angular-ui-router';
+import ngResource from 'angular-resource';
 
-function runBlock(app, logger) {
-  logger.info(`angular es6 seed v${app.version} bootstrap!`);
+import components from '../components';
+import systemModule from './system';
+import userModule from './user';
+
+import appTplUrl from './app.html';
+
+appRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
+function appRouter($stateProvider, $urlRouterProvider) {
+
+	$urlRouterProvider.otherwise('');
+	$stateProvider.state('app', {
+		url: '',
+		templateUrl: appTplUrl
+	});
 }
 
-runBlock.$inject = ['app'];
-
-class AppCtrl {
-
-  constructor(logger) {
-    logger.info(`controller bootstrap!`);
-    this.author = 'kuitos';
-    this.counter = 10;
-  }
-
-}
-
-AppCtrl.$inject = ['logger'];
-
-angular
-  .module('app', [services, filters, components])
-  .controller('AppCtrl', AppCtrl)
-  .run(runBlock);
+export default angular
+	.module('app', [components, uiRouter, ngResource, systemModule, userModule])
+	.config(appRouter)
+	.run(['$rootScope', '$state', ($rootScope, $state) => {
+		$rootScope.$state = $state;
+	}])
+	.name;

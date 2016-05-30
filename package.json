@@ -1,48 +1,60 @@
 {
   "name": "angular-es6-seed",
   "version": "1.0.0",
-  "description": "use es6 to build your angular1.x app",
-  "main": "./src/app/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "angular",
-    "es6"
+    "es6",
+    "seed"
   ],
+  "main": "./index.js",
+  "scripts": {
+    "build": "npm run build:dist",
+    "start": "node server.js",
+    "test": "npm run lint"
+  },
   "author": "kuitos",
-  "license": "MIT",
   "devDependencies": {
     "assets-webpack-plugin": "^3.1.0",
-    "autoprefixer": "^6.0.3",
-    "babel-core": "^5.8.33",
-    "babel-eslint": "^4.1.3",
-    "babel-jest": "^5.3.0",
-    "babel-loader": "^5.3.3",
+    "autoprefixer": "^6.3.6",
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.0",
+    "babel-eslint": "^6.0.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
     "clean-webpack-plugin": "^0.1.4",
-    "core-js": "^1.2.5",
     "css-loader": "^0.21.0",
-    "eslint": "^1.8.0",
-    "eslint-friendly-formatter": "^1.2.2",
+    "eslint": "^2.10.2",
+    "eslint-friendly-formatter": "^2.0.4",
     "eslint-loader": "^1.1.0",
-    "eslint-plugin-react": "^3.6.3",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.1",
     "express": "^4.13.3",
-    "extract-text-webpack-plugin": "^0.9.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
     "html-loader": "^0.4.0",
+    "html-webpack-plugin": "^2.18.0",
     "husky": "^0.10.1",
+    "image-webpack-loader": "^1.6.3",
     "json-mock-kuitos": "^1.0.3",
-    "node-sass": "^3.4.1",
+    "node-dir": "^0.1.11",
+    "node-sass": "^3.7.0",
     "postcss-loader": "^0.7.0",
-    "react-transform-catch-errors": "^1.0.0",
-    "react-transform-hmr": "^1.0.1",
-    "redbox-react": "^1.1.1",
+    "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.1.1",
     "style-loader": "^0.13.0",
+    "url-loader": "^0.5.7",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.4.1"
   },
   "dependencies": {
-    "angular": "^1.4.8"
+    "angular": "^1.5.0",
+    "angular-es-utils": "^1.2.23",
+    "angular-resource": "^1.5.0",
+    "angular-ui-router": "^0.2.18",
+    "ccms-components": "^1.0.1",
+    "normalize.css": "^4.1.1"
   }
 }
