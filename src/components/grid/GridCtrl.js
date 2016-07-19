@@ -7,6 +7,10 @@
 
 export default class GridCtrl {
 
+	constructor() {
+		console.log(1);
+	}
+
 	$onInit() {
 		this.gridData = this.data.sort((v1, v2) => v1 - v2);
 	}

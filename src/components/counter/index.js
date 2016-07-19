@@ -18,6 +18,6 @@ const ddo = {
 
 };
 
-export default angular.module('app.components.grid', [])
+export default angular.module('app.components.counter', [])
 	.component('counter', ddo)
 	.name;

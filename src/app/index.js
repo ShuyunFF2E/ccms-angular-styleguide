@@ -16,9 +16,9 @@ import appTplUrl from './app.html';
 appRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
 function appRouter($stateProvider, $urlRouterProvider) {
 
-	$urlRouterProvider.otherwise('');
+	$urlRouterProvider.otherwise('/');
 	$stateProvider.state('app', {
-		url: '',
+		url: '/',
 		templateUrl: appTplUrl
 	});
 }

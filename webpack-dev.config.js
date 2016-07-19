@@ -10,7 +10,7 @@ var autoprefixer = require('autoprefixer');
 
 module.exports = {
 	devtool: 'source-map',
-	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/app.js'],
+	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/index.js'],
 	output: {
 		path: path.join(__dirname, 'build'),
 		filename: '[name].js',

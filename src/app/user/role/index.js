@@ -5,7 +5,7 @@
  */
 
 import angular from 'angular';
-import userTplUrl from './index.html';
+import userTplUrl from './user-role.html';
 import UserRoleCtrl from './UserRoleCtrl';
 
 userRoleRouter.$inject = ['$stateProvider'];

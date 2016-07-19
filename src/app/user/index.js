@@ -8,14 +8,14 @@ import angular from 'angular';
 
 import userRoleModule from './role';
 
-import userTplUrl from './index.html';
+import userTplUrl from './user.html';
 import UserCtrl from './UserCtrl';
 
 userRouter.$inject = ['$stateProvider'];
 function userRouter($stateProvider) {
 
 	$stateProvider.state('app.user', {
-		url: '/user',
+		url: 'user',
 		templateUrl: userTplUrl,
 		controller: UserCtrl,
 		controllerAs: '$ctrl'
