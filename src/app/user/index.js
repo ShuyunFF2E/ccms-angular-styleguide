@@ -8,18 +8,12 @@ import angular from 'angular';
 
 import userRoleModule from './role';
 
-import userTplUrl from './user.html';
-import UserCtrl from './UserCtrl';
+import Router from './router';
 
 userRouter.$inject = ['$stateProvider'];
 function userRouter($stateProvider) {
 
-	$stateProvider.state('app.user', {
-		url: 'user',
-		templateUrl: userTplUrl,
-		controller: UserCtrl,
-		controllerAs: '$ctrl'
-	});
+	$stateProvider.state('app.user', Router.USER);
 }
 
 export default angular.module('app.user', [userRoleModule])

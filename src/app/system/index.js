@@ -7,18 +7,12 @@
 import './_system.scss';
 
 import angular from 'angular';
-import systemTplUrl from './system.html';
-import SystemCtrl from './SystemCtrl';
+
+import Router from './router';
 
 systemRouter.$inject = ['$stateProvider'];
 function systemRouter($stateProvider) {
-
-	$stateProvider.state('app.system', {
-		url: 'system',
-		templateUrl: systemTplUrl,
-		controller: SystemCtrl,
-		controllerAs: '$ctrl'
-	});
+	$stateProvider.state('app.system', Router.SYSTEM);
 }
 
 export default angular.module('app.system', [])

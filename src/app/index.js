@@ -11,16 +11,13 @@ import components from '../components';
 import systemModule from './system';
 import userModule from './user';
 
-import appTplUrl from './app.html';
+import Router from './router';
 
 appRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
 function appRouter($stateProvider, $urlRouterProvider) {
 
 	$urlRouterProvider.otherwise('/');
-	$stateProvider.state('app', {
-		url: '/',
-		templateUrl: appTplUrl
-	});
+	$stateProvider.state('app', Router.APP);
 }
 
 export default angular
