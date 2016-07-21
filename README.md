@@ -253,9 +253,10 @@
 
 
 ## 使用angular需要规避的点
-宗旨就是把angular只当做视图层框架来用，不要在 VM/M 层中出现angular的影子。
+### 宗旨就是把angular只当做视图层框架来用，不要在 VM/M 层中出现angular的影子。
 
-* 代码里不要出现 $scope
+* 代码里不要出现`$scope` [消除angular中的$scope](https://github.com/kuitos/web-development-enlightenment/blob/master/angular/abandon-%24scope.md)
+* 消除依赖注入(DI) [消除angular中的DI](https://github.com/kuitos/web-development-enlightenment/blob/master/angular/abandon-dependency-inject.md)
 * 不使用angular事件系统，改用：`import EventBus from 'angular-es-utils/event-bus';`
 * 不直接调用angular原生api，如 $http、$resource 等。替代方案 [rs-generator](https://github.com/kuitos/angular-es-utils/blob/master/src/rs-generator/README.md)
 
@@ -267,7 +268,14 @@
 
 ## 嵌入后存在的问题及解决方案
 
-1. 业务系统路由配置的 $state.go 后的刷新问题
+1. Controller/Directive/Service/Filter 命名冲突
+	
+	* Controller: 避免直接使用`angular.controller`语法定义控制器，直接在 路由/指令 控制器参数处传入 Controller 构造函数，而不是 控制器名。
+	* Directive: 业务系统自己开发的组件，命名采用`业务系统名-组件名`的格式。
+	* Service: 业务系统不应该出现angular service，统一用 ES6 Module 代替。
+	* Filter: 同上。
+
+2. 业务系统路由配置的 $state.go 后的二次点击不生效问题
 	
 	* portal里加入reload配置
 		
@@ -281,20 +289,21 @@
 		$urlRouterProvider.when('/cb', '/cb/index');
 		```
 
-2. 路由刷新问题
+3. 路由刷新问题
 	
 	进入某个业务系统的子路由时，刷新页面只会回到入口页。
 	
 	正在解决中 [ui-router在使用按需加载的同时支持路由查询功能](http://jira.yunat.com/browse/COMPONENTS-49)
 
-3. webpack整合打包 webpackJsonp 问题
+4. webpack整合打包 webpackJsonp 问题
 	
 	各个子系统配置不同的jsonp名称 [webpack jsonpFunction config](https://webpack.github.io/docs/configuration.html#output-jsonpfunction)
 
-4. 重复打包(js & css)  
-	node-sass 的锅 [once import](https://github.com/sass/sass/issues/139)
+4. 重复打包(css)  
 	
-	现阶段可以参考组件库，在build分离出css后，再手动对css做remove duplicate的处理。  
+	在不同的scss中`@import`同一个scss时，会出现重复打包的情况，这是 node-sass 的锅 [once import](https://github.com/sass/sass/issues/139)
+	
+	真正解决只能等 node-sass 修复，现阶段只能采取`曲线救国`的方式。例如组件库的做法，在build分离出css后，再手动对css做remove duplicate的处理。  
 	[OptimizeCssAssetsPlugin](https://github.com/ShuyunFF2E/ccms-components/blob/master/webpack-build.config.js#L49)  
 	[禁用css-loader自带的mini功能](https://github.com/ShuyunFF2E/ccms-components/blob/master/webpack-build.config.js#L102)
 
