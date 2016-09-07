@@ -9,6 +9,7 @@ var HTMLPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer');
 
 module.exports = {
+	env: 'development',
 	devtool: 'source-map',
 	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/index.js'],
 	output: {
@@ -16,13 +17,18 @@ module.exports = {
 		filename: '[name].js',
 		publicPath: '/' // hot loader publish dir
 	},
+	externals: {
+		'angular': 'angular',
+		'angular-resource': '\'ngResource\'',
+		'angular-ui-router': '\'ui.router\'',
+		'ccms-components': '\'ccms.components\''
+	},
 	plugins: [
 		new HTMLPlugin({
 			template: './src/index.html',
-			filename: 'index.html',
+			filename: './app/index.html',
 			inject: false
 		}),
-		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin()
 	],
@@ -68,12 +74,7 @@ module.exports = {
 				include: path.join(__dirname, 'src/app')
 			},
 			{
-				test: /\.css$/,
-				loaders: ['style', 'css?modules', 'postcss', 'resolve-url'],
-				exclude: /(node_modules|bower_components)/
-			},
-			{
-				test: /\.scss$/,
+				test: /\.(sc|c)ss$/,
 				loaders: ['style', 'css', 'postcss', 'resolve-url', 'sass?sourceMap'],
 				exclude: /(node_modules|bower_components)/
 			},

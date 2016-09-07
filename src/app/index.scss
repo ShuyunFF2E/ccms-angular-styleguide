@@ -1,0 +1,16 @@
+.cc-main-container {
+	height: 100%;
+	display: flex;
+}
+
+.cc-side-container {
+	border: 1px solid green;
+	width: 200px;
+}
+
+.cc-content-container {
+	border: 1px solid orange;
+	flex: 1;
+}
+
+

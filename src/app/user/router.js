@@ -10,9 +10,9 @@ import UserCtrl from './UserCtrl';
 export default {
 
 	USER: {
-		url: 'user',
+		url: '/user',
 		templateUrl: userTplUrl,
 		controller: UserCtrl,
 		controllerAs: '$ctrl'
 	}
-}
+};

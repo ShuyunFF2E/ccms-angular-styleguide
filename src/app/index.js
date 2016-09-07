@@ -11,19 +11,11 @@ import components from '../components';
 import systemModule from './system';
 import userModule from './user';
 
-import Router from './router';
-
-appRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
-function appRouter($stateProvider, $urlRouterProvider) {
-
-	$urlRouterProvider.otherwise('/');
-	$stateProvider.state('app', Router.APP);
-}
+import './index.scss';
 
 export default angular
-	.module('app', [components, uiRouter, ngResource, systemModule, userModule])
-	.config(appRouter)
-	.run(['$rootScope', '$state', ($rootScope, $state) => {
-		$rootScope.$state = $state;
+	.module('ccms.app', [components, uiRouter, ngResource, systemModule, userModule])
+	.run(['$state', $state => {
+		$state.go('app.user');
 	}])
 	.name;

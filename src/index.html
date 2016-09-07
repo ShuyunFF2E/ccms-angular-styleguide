@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="app">
-<head>
-	<meta charset="UTF-8">
-	<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-	<link rel="stylesheet" href="<%= htmlWebpackPlugin.files.chunks[chunk].css %>">
-	<% } %>
-	<title>index</title>
-</head>
-<body>
-
-<ui-view></ui-view>
-
-
 <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-<script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+<% htmlWebpackPlugin.files.chunks[chunk].css.forEach(function(css){ %>
+<link rel="stylesheet" href="<%= css %>">
+<% }) %>
 <% } %>
 
-</body>
-</html>
+<section class="cc-main-container">
+
+	<% if(webpackConfig.env==='development') { %>
+	<nav class="cc-side-container">
+		<ul>
+			<li><a ui-sref=".user">user</a></li>
+			<li><a ui-sref=".system">system</a></li>
+		</ul>
+	</nav>
+	<% } %>
+	<ui-view class="cc-content-container"></ui-view>
+
+</section>
+
+<% var i = 0; for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+<script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>" seq="<%= i++ %>"></script>
+<% } %>

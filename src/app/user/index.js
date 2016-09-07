@@ -16,6 +16,6 @@ function userRouter($stateProvider) {
 	$stateProvider.state('app.user', Router.USER);
 }
 
-export default angular.module('app.user', [userRoleModule])
+export default angular.module('ccms.app.user', [userRoleModule])
 	.config(userRouter)
 	.name;

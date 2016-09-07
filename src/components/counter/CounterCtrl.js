@@ -4,7 +4,7 @@
  * @since 2016-05-30
  */
 
-import {Debounce} from 'angular-es-utils/decorators';
+import { Debounce } from 'angular-es-utils/decorators';
 
 export default class CounterCtrl {
 

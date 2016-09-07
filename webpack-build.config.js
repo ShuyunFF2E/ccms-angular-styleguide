@@ -4,36 +4,71 @@
  * @since 2015-08-06
  */
 var path = require('path');
+var argv = require('yargs').argv;
 var webpack = require('webpack');
 var HTMLPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer');
+var CleanPlugin = require('clean-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+var cssnano = require('cssnano');
+var cssNanoCommonOpts = {
+	discardComments: {removeAll: true},
+	discardDuplicates: true,
+	discardOverridden: true,
+	discardUnused: true,
+	minifyGradients: true
+};
+var publicPath = argv.env;
 
 module.exports = {
+	env: 'production',
 	devtool: 'source-map',
-	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/app.js'],
+	context: path.join(__dirname, 'src'),
+	entry: './app/index.js',
 	output: {
-		path: path.join(__dirname, 'dist'),
-		filename: '[name].js'
+		path: path.join(__dirname, publicPath),
+		filename: '[name]-[hash:20].min.js',
+		publicPath: '/' + publicPath + '/',
+		jsonpFunction: 'appJsonp'
 	},
 	externals: {
 		'angular': 'angular',
 		'angular-resource': '\'ngResource\'',
-		'angular-ui-router': '\'ui.router\''
+		'angular-ui-router': '\'ui.router\'',
+		'ccms-components': '\'ccms.components\''
 	},
 	plugins: [
+		new CleanPlugin([publicPath]),
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('production')
 			}
 		}),
 		new HTMLPlugin({
-			template: './src/index.html',
-			filename: 'index.html',
+			template: './index.html',
+			filename: '../' + publicPath + '/index.html',
 			inject: false
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			include: /\.min\.js$/,
 			minimize: true
+		}),
+		new ExtractTextPlugin('[name]-[hash:20].min.css'),
+		// 处理extract出来的css
+		new OptimizeCssAssetsPlugin({
+			assetNameRegExp: /\.css$/g,
+			cssProcessor: cssnano,
+			cssProcessorOptions: Object.assign({
+				core: false
+			}, cssNanoCommonOpts),
+			canPrint: true
+		}),
+		new OptimizeCssAssetsPlugin({
+			assetNameRegExp: /\.min\.css$/g,
+			cssProcessor: cssnano,
+			cssProcessorOptions: cssNanoCommonOpts,
+			canPrint: true
 		}),
 		new webpack.optimize.DedupePlugin(),
 		new webpack.NoErrorsPlugin()
@@ -75,24 +110,22 @@ module.exports = {
 
 			{
 				test: /.html$/,
-				loader: 'file?name=[path][name]-[hash:8].[ext]',
+				loader: 'file?name=[path][name]-[hash:20].[ext]',
 				exclude: /(node_modules|bower_components)/,
 				include: path.join(__dirname, 'src/app')
 			},
 			{
-				test: /\.css$/,
-				loaders: ['style', 'css', 'postcss', 'resolve-url'],
-				exclude: /(node_modules|bower_components)/
-			},
-			{
-				test: /\.scss$/,
-				loaders: ['style', 'css', 'postcss', 'resolve-url', 'sass?sourceMap'],
+				test: /\.(sc|c)ss$/,
+				loader: ExtractTextPlugin.extract({
+					loader: 'css?-minimize!postcss!resolve-url!sass?sourceMap',
+					fallbackLoader: 'style'
+				}),
 				exclude: /(node_modules|bower_components)/
 			},
 			{
 				test: /\.(jpe?g|png|gif)$/i,
 				loaders: [
-					'file?hash=sha512&digest=hex&name=[hash:8].[ext]',
+					'file?hash=sha512&digest=hex&name=[hash:20].[ext]',
 					'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
 				]
 			},

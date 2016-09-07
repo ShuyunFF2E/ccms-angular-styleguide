@@ -6,12 +6,10 @@
 
 import angular from 'angular';
 
-import grid from './grid';
 import counter from './counter';
 
 export default angular
 	.module('app.components', [
-		grid,
 		counter
 	])
 	.name;

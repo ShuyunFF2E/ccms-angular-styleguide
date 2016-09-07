@@ -10,10 +10,10 @@ import SystemCtrl from './SystemCtrl';
 export default {
 
 	SYSTEM: {
-		url: 'system',
+		url: '/system',
 		templateUrl: systemTplUrl,
 		controller: SystemCtrl,
 		controllerAs: '$ctrl'
 	}
 
-}
+};
