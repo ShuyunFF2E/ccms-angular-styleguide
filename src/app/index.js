@@ -15,7 +15,7 @@ import './index.scss';
 
 export default angular
 	.module('ccms.app', [components, uiRouter, ngResource, systemModule, userModule])
-	.run(['$state', $state => {
+	.run(['$state', ($state) => {
 		$state.go('app.user');
 	}])
 	.name;

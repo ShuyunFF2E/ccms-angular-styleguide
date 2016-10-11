@@ -4,9 +4,7 @@
  * @since 2016-03-16
  */
 
-const chopStyle2Num = style => {
-	return Number(style.substr(0, style.length - 2));
-};
+const chopStyle2Num = style => Number(style.substr(0, style.length - 2));
 
 const closestParent = (element, tagName) => {
 
@@ -27,7 +25,7 @@ const closestParent = (element, tagName) => {
 const isContentOverflow = (element, content) => {
 
 	// 创建临时span
-	let span = document.createElement('span');
+	const span = document.createElement('span');
 	span.innerHTML = content;
 	span.style.opacity = 0;
 	document.body.appendChild(span);
@@ -35,12 +33,12 @@ const isContentOverflow = (element, content) => {
 	const paddingSides = chopStyle2Num(window.getComputedStyle(element).getPropertyValue('padding-left')) + chopStyle2Num(window.getComputedStyle(element).getPropertyValue('padding-right'));
 
 	// 得到文本是否超出的flag
-	const isContentOverflow = span.offsetWidth > (element.clientWidth - paddingSides);
+	const isOverflow = span.offsetWidth > element.clientWidth - paddingSides;
 
 	// 移除临时元素
 	document.body.removeChild(span);
 
-	return isContentOverflow;
+	return isOverflow;
 
 };
 
