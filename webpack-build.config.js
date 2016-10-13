@@ -50,10 +50,10 @@ module.exports = {
 			filename: '../' + publicPath + '/index.html',
 			inject: false
 		}),
-		new webpack.optimize.UglifyJsPlugin({
-			include: /\.min\.js$/,
-			minimize: true
-		}),
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	include: /\.min\.js$/,
+		// 	minimize: true
+		// }),
 		new ExtractTextPlugin('[name]-[hash:20].min.css'),
 		// 处理extract出来的css
 		new OptimizeCssAssetsPlugin({

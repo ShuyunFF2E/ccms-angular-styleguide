@@ -4,16 +4,16 @@
 <% }) %>
 <% } %>
 
-<section class="cc-main-container">
+<section class="cc-main-container" ng-controller="AppCtrl as app">
 
 	<% if(webpackConfig.env==='development') { %>
-	<nav class="cc-side-container">
-		<ul>
-			<li><a ui-sref=".user">user</a></li>
-			<li><a ui-sref=".system">system</a></li>
-		</ul>
-	</nav>
+	<cc-menu-bar class="cc-side-container"
+	             unfold="app.menusOptions.unfold"
+	             menu-source="app.menusOptions.menusResource"
+	             shop-source="app.menusOptions.shopsResource">
+	</cc-menu-bar>
 	<% } %>
+
 	<ui-view class="cc-content-container"></ui-view>
 
 </section>

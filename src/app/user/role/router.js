@@ -11,9 +11,13 @@ export default {
 
 	ROLE: {
 		url: '/role',
-		templateUrl: userTplUrl,
-		controller: UserRoleCtrl,
-		controllerAs: '$ctrl'
+		views: {
+			'@app': {
+				templateUrl: userTplUrl,
+				controller: UserRoleCtrl,
+				controllerAs: '$ctrl'
+			}
+		}
 	}
 
 };

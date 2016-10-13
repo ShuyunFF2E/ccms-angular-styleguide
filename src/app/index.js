@@ -11,11 +11,9 @@ import components from '../components';
 import systemModule from './system';
 import userModule from './user';
 
-import './index.scss';
+import AppCtrl from './AppCtrl';
 
 export default angular
 	.module('ccms.app', [components, uiRouter, ngResource, systemModule, userModule])
-	.run(['$state', ($state) => {
-		$state.go('app.user');
-	}])
+	.controller('AppCtrl', AppCtrl)
 	.name;
