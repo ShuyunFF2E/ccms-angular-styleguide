@@ -30,6 +30,13 @@ app.use(/\/$/, function(req, res) {
 	res.redirect('/portal/index.html');
 });
 
+app.use(/\/web-portal\/yangyangyang3\/system/, function(req, res) {
+	res.redirect('/web-portal/qiushi/system');
+});
+
+app.use('/web-portal', jsonServer.proxy('http://172.18.21.89', '2333'));
+app.use('/dashboard', jsonServer.proxy('http://qiushi.ccmsyun.com', '8181'));
+
 app.use(require('webpack-hot-middleware')(compiler));
 app.use(jsonServer.defaults({static: path.resolve(__dirname)}));
 app.use(jsonServer.router(apiPrefix, filename));
