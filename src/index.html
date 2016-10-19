@@ -4,20 +4,23 @@
 <% }) %>
 <% } %>
 
-<section class="cc-main-container" ng-controller="AppCtrl as app">
+<div class="ccmsc-main-container" ng-controller="AppCtrl as app">
+	<div class="left-container">
+		<% if(webpackConfig.env==='development') { %>
+		<cc-menu-bar class="cc-side-container"
+				unfold="app.menusOptions.unfold"
+				menu-source="app.menusOptions.menusResource"
+				shop-source="app.menusOptions.shopsResource">
+		</cc-menu-bar>
+		<% } %>
+	</div>
 
-	<% if(webpackConfig.env==='development') { %>
-	<cc-menu-bar class="cc-side-container"
-	             unfold="app.menusOptions.unfold"
-	             menu-source="app.menusOptions.menusResource"
-	             shop-source="app.menusOptions.shopsResource">
-	</cc-menu-bar>
-	<% } %>
-
-	<ui-view class="cc-content-container"></ui-view>
-
-</section>
+	<div class="center-container">
+		<ui-view></ui-view>
+	</div>
+</div>
 
 <% var i = 0; for (var chunk in htmlWebpackPlugin.files.chunks) { %>
 <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>" seq="<%= i++ %>"></script>
 <% } %>
+
