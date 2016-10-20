@@ -4,7 +4,7 @@
 <% }) %>
 <% } %>
 
-<div class="ccmsc-main-container" ng-controller="AppCtrl as app">
+<div class="ccmsc-main-container" ng-controller="AppCtrl as app" ng-class="{'contract-left':!app.menusOptions.unfold}>
 	<div class="left-container">
 		<% if(webpackConfig.env==='development') { %>
 		<cc-menu-bar class="cc-side-container"
