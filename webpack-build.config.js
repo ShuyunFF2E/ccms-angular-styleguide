@@ -58,7 +58,7 @@ module.exports = {
 		// 处理extract出来的css
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.css$/g,
-			cssProcessor: cssnano,
+			cssProcessor: cssnano({reduceIdents: false}),
 			cssProcessorOptions: Object.assign({
 				core: false
 			}, cssNanoCommonOpts),
@@ -66,7 +66,7 @@ module.exports = {
 		}),
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.min\.css$/g,
-			cssProcessor: cssnano,
+			cssProcessor: cssnano({reduceIdents: false}),
 			cssProcessorOptions: cssNanoCommonOpts,
 			canPrint: true
 		}),
