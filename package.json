@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "main": "./index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --config webpack-build.config.js --env app",
+    "build:develop": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=develop",
+    "build:qa": "webpack --config webpack-build.config.js --app appName --env qa",
+    "build:stage": "webpack --config webpack-build.config.js --app appName --env stage",
+    "build:production": "webpack --config webpack-build.config.js --app appName --env production",
     "lint": "NODE_EVN=test eslint src",
     "start": "node server.js",
     "test": "npm run lint"
@@ -57,7 +60,10 @@
   },
   "eslintConfig": {
     "parser": "babel-eslint",
-    "extends": "shuyun/angular"
+    "extends": "shuyun/angular",
+    "rules": {
+      "no-process-env": "off"
+    }
   },
   "author": "kuitos",
   "keywords": [

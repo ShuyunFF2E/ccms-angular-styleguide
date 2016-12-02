@@ -8,6 +8,8 @@ var webpack = require('webpack');
 var HTMLPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer');
 
+var API_DOMAIN = '';
+
 module.exports = {
 	env: 'development',
 	devtool: 'source-map',
@@ -24,6 +26,11 @@ module.exports = {
 		'ccms-components': '\'ccms.components\''
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {
+				API_DOMAIN: JSON.stringify(API_DOMAIN)
+			}
+		}),
 		new HTMLPlugin({
 			template: './src/index.html',
 			filename: './app/index.html',

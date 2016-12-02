@@ -19,7 +19,13 @@ var cssNanoCommonOpts = {
 	discardUnused: true,
 	minifyGradients: true
 };
-var publicPath = argv.env;
+
+// 根据 build 变量获取应用信息及系统环境等信息
+var env = argv.env;
+var appName = env.appName;
+var systemEnv = env.sysEnv;
+// 不同环境的系统 api 接口信息
+var apiDomains = require('./api-domain.json');
 
 module.exports = {
 	env: 'production',
@@ -27,10 +33,10 @@ module.exports = {
 	context: path.join(__dirname, 'src'),
 	entry: './app/index.js',
 	output: {
-		path: path.join(__dirname, publicPath),
+		path: path.join(__dirname, 'dist'),
 		filename: '[name]-[hash:20].min.js',
-		publicPath: '/' + publicPath + '/',
-		jsonpFunction: 'appJsonp'
+		publicPath: '/' + appName + '/',
+		jsonpFunction: appName + 'Jsonp'
 	},
 	externals: {
 		'angular': 'angular',
@@ -39,21 +45,22 @@ module.exports = {
 		'ccms-components': '\'ccms.components\''
 	},
 	plugins: [
-		new CleanPlugin([publicPath]),
+		new CleanPlugin(['dist']),
 		new webpack.DefinePlugin({
 			'process.env': {
-				NODE_ENV: JSON.stringify('production')
+				NODE_ENV: JSON.stringify('production'),
+				API_DOMAIN: JSON.stringify(apiDomains[systemEnv])
 			}
 		}),
 		new HTMLPlugin({
 			template: './index.html',
-			filename: '../' + publicPath + '/index.html',
+			filename: '../' + appName + '/index.html',
 			inject: false
 		}),
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	include: /\.min\.js$/,
-		// 	minimize: true
-		// }),
+		new webpack.optimize.UglifyJsPlugin({
+			include: /\.min\.js$/,
+			minimize: true
+		}),
 		new ExtractTextPlugin('[name]-[hash:20].min.css'),
 		// 处理extract出来的css
 		new OptimizeCssAssetsPlugin({
