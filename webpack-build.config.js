@@ -59,6 +59,7 @@ module.exports = {
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			include: /\.min\.js$/,
+			mangle: false,
 			minimize: true
 		}),
 		new ExtractTextPlugin('[name]-[hash:20].min.css'),
