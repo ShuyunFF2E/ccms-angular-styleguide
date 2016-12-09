@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "main": "./index.js",
   "scripts": {
-    "build:develop": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=develop",
-    "build:qa": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=qa",
-    "build:stage": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=stage",
-    "build:production": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=production",
+    "build:develop": "webpack --config webpack-build.config.js --env develop",
+    "build:qa": "webpack --config webpack-build.config.js --env qa",
+    "build:stage": "webpack --config webpack-build.config.js --env stage",
+    "build:production": "webpack --config webpack-build.config.js --env production",
     "lint": "NODE_EVN=test eslint src",
     "start": "node server.js",
     "test": "npm run lint"

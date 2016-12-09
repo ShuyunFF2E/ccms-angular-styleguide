@@ -21,22 +21,26 @@ var cssNanoCommonOpts = {
 };
 
 // 根据 build 变量获取应用信息及系统环境等信息
-var env = argv.env;
-var appName = env.appName;
-var systemEnv = env.sysEnv;
+var package = require('./package.json');
+var packageName = package.name;
+var appName = packageName.substr(packageName.indexOf('ccms-') + 5);
+var systemEnv = argv.env;
 // 不同环境的系统 api 接口信息
 var apiDomains = require('./api-domain.json');
 
 module.exports = {
-	env: 'production',
+	env: systemEnv,
 	devtool: 'source-map',
 	context: path.join(__dirname, 'src'),
-	entry: './app/index.js',
+	entry: {
+		app: './app/index.js',
+		lib: Object.keys(package.dependencies)
+	},
 	output: {
-		path: path.join(__dirname, 'dist'),
-		filename: '[name]-[hash:20].min.js',
+		path: path.join(__dirname, appName),
+		filename: '[name]-[chunkhash:20].min.js',
 		publicPath: '/' + appName + '/',
-		jsonpFunction: appName + 'Jsonp'
+		jsonpFunction: appName.split('-').join('') + 'Jsonp'
 	},
 	externals: {
 		'angular': 'angular',
@@ -45,7 +49,7 @@ module.exports = {
 		'ccms-components': '\'ccms.components\''
 	},
 	plugins: [
-		new CleanPlugin(['dist']),
+		new CleanPlugin([appName]),
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('production'),
@@ -55,13 +59,22 @@ module.exports = {
 		new HTMLPlugin({
 			template: './index.html',
 			filename: '../' + appName + '/index.html',
+			excludeChunks: ['lib'],
 			inject: false
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'init',
+			chunks: ['app', 'lib']
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			include: /\.min\.js$/,
 			minimize: true
 		}),
-		new ExtractTextPlugin('[name]-[hash:20].min.css'),
+		new ExtractTextPlugin({
+			filename: '[name]-[hash:20].min.css',
+			disable: false,
+			allChunks: true
+		}),
 		// 处理extract出来的css
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.css$/g,
@@ -123,10 +136,9 @@ module.exports = {
 			{
 				test: /\.(sc|c)ss$/,
 				loader: ExtractTextPlugin.extract({
-					loader: 'css?-minimize!postcss!resolve-url!sass?sourceMap',
-					fallbackLoader: 'style'
-				}),
-				exclude: /(node_modules|bower_components)/
+					notExtractLoader: 'style-loader',
+					loader: 'css?-minimize!postcss!resolve-url!sass?sourceMap'
+				})
 			},
 			{
 				test: /\.(jpe?g|png|gif)$/i,

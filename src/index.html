@@ -6,7 +6,7 @@
 
 <section class="cc-main-container" ng-controller="AppCtrl as app">
 
-	<% if(webpackConfig.env==='development') { %>
+	<% if(webpackConfig.env!=='iframe') { %>
 	<cc-menu-bar class="cc-side-container"
 	             unfold="app.menusOptions.unfold"
 	             menu-source="app.menusOptions.menusResource"

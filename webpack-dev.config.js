@@ -11,7 +11,7 @@ var autoprefixer = require('autoprefixer');
 var API_DOMAIN = '';
 
 module.exports = {
-	env: 'development',
+	env: 'develop',
 	devtool: 'source-map',
 	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/index.js'],
 	output: {
@@ -75,7 +75,7 @@ module.exports = {
 
 			{
 				test: /.html$/,
-				loader: 'file?name=[path][name]-[hash:8].[ext]',
+				loader: 'file?name=[path][name]-[hash:20].[ext]',
 				exclude: /(node_modules|bower_components)/,
 				include: path.join(__dirname, 'src/app')
 			},
@@ -87,7 +87,7 @@ module.exports = {
 			{
 				test: /\.(jpe?g|png|gif|svg)$/i,
 				loaders: [
-					'file?hash=sha512&digest=hex&name=[hash:8].[ext]'
+					'file?hash=sha512&digest=hex&name=[hash:20].[ext]'
 				]
 			},
 			{
