@@ -33,7 +33,7 @@ module.exports = {
 	context: path.join(__dirname, 'src'),
 	entry: './app/index.js',
 	output: {
-		path: path.join(__dirname, 'dist'),
+		path: path.join(__dirname, appName),
 		filename: '[name]-[hash:20].min.js',
 		publicPath: '/' + appName + '/',
 		jsonpFunction: appName + 'Jsonp'
