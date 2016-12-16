@@ -3,16 +3,16 @@
  * @homepage https://github.com/kuitos/
  * @since 2015-08-06
  */
-var path = require('path');
-var argv = require('yargs').argv;
-var webpack = require('webpack');
-var HTMLPlugin = require('html-webpack-plugin');
-var autoprefixer = require('autoprefixer');
-var CleanPlugin = require('clean-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-var cssnano = require('cssnano');
-var cssNanoCommonOpts = {
+const path = require('path');
+const argv = require('yargs').argv;
+const webpack = require('webpack');
+const HTMLPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
+const CleanPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const cssnano = require('cssnano');
+const cssNanoCommonOpts = {
 	discardComments: {removeAll: true},
 	discardDuplicates: true,
 	discardOverridden: true,
@@ -21,23 +21,24 @@ var cssNanoCommonOpts = {
 };
 
 // 根据 build 变量获取应用信息及系统环境等信息
-var package = require('./package.json');
-var packageName = package.name;
-var appName = packageName.substr(packageName.indexOf('ccms-') + 5);
-var systemEnv = argv.env;
+const srcCodeDir = path.join(__dirname, 'src');
+const buildOutputDir = path.join(__dirname, 'dist');
+const packageInfo = require('./package.json');
+const packageName = packageInfo.name;
+const appName = packageName.substr(packageName.indexOf('ccms-') + 5);
+const systemEnv = argv.env;
 // 不同环境的系统 api 接口信息
-var apiDomains = require('./api-domain.json');
+const apiDomains = require('./api-domain.json');
 
 module.exports = {
-	env: systemEnv,
 	devtool: 'source-map',
-	context: path.join(__dirname, 'src'),
+	context: srcCodeDir,
 	entry: {
 		app: './app/index.js',
-		lib: Object.keys(package.dependencies)
+		lib: Object.keys(packageInfo.dependencies)
 	},
 	output: {
-		path: path.join(__dirname, appName),
+		path: buildOutputDir,
 		filename: '[name]-[chunkhash:20].min.js',
 		publicPath: '/' + appName + '/',
 		jsonpFunction: appName.split('-').join('') + 'Jsonp'
@@ -49,7 +50,7 @@ module.exports = {
 		'ccms-components': '\'ccms.components\''
 	},
 	plugins: [
-		new CleanPlugin([appName]),
+		new CleanPlugin([buildOutputDir]),
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('production'),
@@ -58,7 +59,7 @@ module.exports = {
 		}),
 		new HTMLPlugin({
 			template: './index.html',
-			filename: '../' + appName + '/index.html',
+			filename: buildOutputDir + '/index.html',
 			excludeChunks: ['lib'],
 			inject: false
 		}),
@@ -67,8 +68,11 @@ module.exports = {
 			chunks: ['app', 'lib']
 		}),
 		new webpack.optimize.UglifyJsPlugin({
-			include: /\.min\.js$/,
-			minimize: true
+			sourceMap: true,
+			compress: {
+				warnings: true
+			},
+			include: /\.min\.js$/
 		}),
 		new ExtractTextPlugin({
 			filename: '[name]-[hash:20].min.css',
@@ -84,59 +88,64 @@ module.exports = {
 			}, cssNanoCommonOpts),
 			canPrint: true
 		}),
-		new OptimizeCssAssetsPlugin({
-			assetNameRegExp: /\.min\.css$/g,
-			cssProcessor: cssnano({reduceIdents: false}),
-			cssProcessorOptions: cssNanoCommonOpts,
-			canPrint: true
-		}),
-		new webpack.optimize.DedupePlugin(),
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		new webpack.LoaderOptionsPlugin({
+			options: {
+				env: systemEnv,
+				context: srcCodeDir,
+				output: {
+					path: buildOutputDir
+				},
+				minimize: true,
+				postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
+				eslint: {
+					emitWarning: true,
+					emitError: true,
+					formatter: require('eslint-friendly-formatter')
+				},
+			}
+		})
 	],
 	resolve: {
-		extensions: ['', '.js']
+		extensions: ['.js']
 	},
-	eslint: {
-		emitWarning: true,
-		emitError: true,
-		formatter: require('eslint-friendly-formatter')
+	resolveLoader: {
+		moduleExtensions: ['-loader']
 	},
-	postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
 	module: {
-		preLoaders: [
+
+		rules: [
 			{
 				test: /\.js?$/,
-				loader: 'eslint-loader',
+				loader: 'eslint',
+				enforce: 'pre',
 				exclude: /node_modules/,
-				include: path.join(__dirname, 'src')
-			}
-		],
-
-		loaders: [
+				include: srcCodeDir
+			},
 			{
 				test: /\.js?$/,
 				loaders: ['babel'],
 				exclude: /(node_modules|bower_components)/,
-				include: [path.join(__dirname, 'src'), path.join(__dirname, 'demo')]
+				include: [srcCodeDir, path.join(__dirname, 'demo')]
 			},
 			{
 				test: /\.tpl\.html$/,
 				loader: 'html',
 				query: {interpolate: true},
 				exclude: /(node_modules|bower_components)/,
-				include: path.join(__dirname, 'src/components')
+				include: srcCodeDir + '/components'
 			},
 
 			{
 				test: /.html$/,
 				loader: 'file?name=[path][name]-[hash:20].[ext]',
 				exclude: /(node_modules|bower_components)/,
-				include: path.join(__dirname, 'src/app')
+				include: srcCodeDir + '/app'
 			},
 			{
 				test: /\.(sc|c)ss$/,
 				loader: ExtractTextPlugin.extract({
-					notExtractLoader: 'style-loader',
+					notExtractLoader: 'style',
 					loader: 'css?-minimize!postcss!resolve-url!sass?sourceMap'
 				})
 			},

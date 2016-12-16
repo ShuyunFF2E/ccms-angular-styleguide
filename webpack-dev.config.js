@@ -3,15 +3,14 @@
  * @homepage https://github.com/kuitos/
  * @since 2015-08-06
  */
-var path = require('path');
-var webpack = require('webpack');
-var HTMLPlugin = require('html-webpack-plugin');
-var autoprefixer = require('autoprefixer');
-
-var API_DOMAIN = '';
+const path = require('path');
+const webpack = require('webpack');
+const HTMLPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
+const srcCodeDir = path.join(__dirname, 'src');
+const API_DOMAIN = '';
 
 module.exports = {
-	env: 'develop',
 	devtool: 'source-map',
 	entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&reload=true', './src/app/index.js'],
 	output: {
@@ -37,47 +36,58 @@ module.exports = {
 			inject: false
 		}),
 		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		new webpack.LoaderOptionsPlugin({
+			options: {
+				env: 'develop',
+				context: srcCodeDir,
+				output: {
+					path: path.join(__dirname, '/')
+				},
+				postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
+				eslint: {
+					emitWarning: true,
+					emitError: true,
+					formatter: require('eslint-friendly-formatter')
+				},
+			}
+		})
 	],
 	resolve: {
-		extensions: ['', '.js']
+		extensions: ['.js']
 	},
-	eslint: {
-		emitWarning: true,
-		emitError: true,
-		formatter: require('eslint-friendly-formatter')
+	resolveLoader: {
+		moduleExtensions: ['-loader']
 	},
-	postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
 	module: {
-		preLoaders: [
+
+		rules: [
 			{
 				test: /\.js$/,
-				loader: 'eslint-loader',
+				loader: 'eslint',
+				enforce: 'pre',
 				exclude: /node_modules/,
-				include: [path.join(__dirname, 'src')]
-			}
-		],
-
-		loaders: [
+				include: [srcCodeDir]
+			},
 			{
 				test: /\.js?$/,
 				loaders: ['babel'],
 				exclude: /(node_modules|bower_components)/,
-				include: [path.join(__dirname, 'src')]
+				include: [srcCodeDir]
 			},
 			{
 				test: /\.tpl\.html$/,
 				loader: 'html',
 				query: {interpolate: true},
 				exclude: /(node_modules|bower_components)/,
-				include: path.join(__dirname, 'src/components')
+				include: srcCodeDir + '/components'
 			},
 
 			{
 				test: /.html$/,
 				loader: 'file?name=[path][name]-[hash:20].[ext]',
 				exclude: /(node_modules|bower_components)/,
-				include: path.join(__dirname, 'src/app')
+				include: srcCodeDir + '/app'
 			},
 			{
 				test: /\.(sc|c)ss$/,
