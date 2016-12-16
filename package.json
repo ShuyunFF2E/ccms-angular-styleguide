@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "main": "./index.js",
   "scripts": {
-    "build:develop": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=develop",
-    "build:qa": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=qa",
-    "build:stage": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=stage",
-    "build:production": "webpack --config webpack-build.config.js --env.appName=app --env.sysEnv=production",
+    "build:develop": "webpack --config webpack-build.config.js --progress --env develop",
+    "build:qa": "webpack --config webpack-build.config.js --progress --env qa",
+    "build:stage": "webpack --config webpack-build.config.js --progress --env stage",
+    "build:production": "webpack --config webpack-build.config.js --progress --env production",
     "lint": "NODE_EVN=test eslint src",
     "start": "node server.js",
     "test": "npm run lint"
@@ -39,14 +39,14 @@
     "json-mock-kuitos": "^1.0.3",
     "kuitos-angular-utils": "^1.3.10",
     "node-dir": "^0.1.11",
-    "node-sass": "^3.7.0",
+    "node-sass": "^4.0.0",
     "optimize-css-assets-webpack-plugin": "^1.3.0",
     "postcss-loader": "^0.7.0",
     "resolve-url-loader": "^1.4.3",
-    "sass-loader": "^3.1.1",
+    "sass-loader": "^4.1.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
-    "webpack": "2.1.0-beta.22",
+    "webpack": "^2.2.0-rc.0",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.4.1"
   },
@@ -62,7 +62,9 @@
     "parser": "babel-eslint",
     "extends": "shuyun/angular",
     "rules": {
-      "no-process-env": "off"
+      "no-process-env": "off",
+      "global-require": "off",
+      "angular/json-functions": "off"
     }
   },
   "author": "kuitos",

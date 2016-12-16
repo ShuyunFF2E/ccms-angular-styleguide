@@ -1,6 +1,6 @@
 {
-  "develop": "//develop-api.shuyun.com",
-  "qa": "//qa-api.shuyun.com",
-  "stage": "//stage-api.shuyun.com",
-  "production": "//production-api.shuyun.com"
+  "develop": "",
+  "qa": "//qa-ual.fenxibao.com",
+  "stage": "//stage-ual.fenxibao.com",
+  "production": "//ual.fenxibao.com"
 }
