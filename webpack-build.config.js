@@ -26,6 +26,7 @@ const buildOutputDir = path.join(__dirname, 'dist');
 const packageInfo = require('./package.json');
 const packageName = packageInfo.name;
 const appName = packageName.substr(packageName.indexOf('ccms-') + 5);
+const publicPath = '/' + appName + '/';
 const systemEnv = argv.env;
 // 不同环境的系统 api 接口信息
 const apiDomains = require('./api-domain.json');
@@ -40,7 +41,7 @@ module.exports = {
 	output: {
 		path: buildOutputDir,
 		filename: '[name]-[chunkhash:20].min.js',
-		publicPath: '/' + appName + '/',
+		publicPath: publicPath,
 		jsonpFunction: appName.split('-').join('') + 'Jsonp'
 	},
 	externals: {
@@ -67,13 +68,13 @@ module.exports = {
 			name: 'init',
 			chunks: ['app', 'lib']
 		}),
-		new webpack.optimize.UglifyJsPlugin({
-			sourceMap: true,
-			compress: {
-				warnings: true
-			},
-			include: /\.min\.js$/
-		}),
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	sourceMap: true,
+		// 	compress: {
+		// 		warnings: true
+		// 	},
+		// 	include: /\.min\.js$/
+		// }),
 		new ExtractTextPlugin({
 			filename: '[name]-[hash:20].min.css',
 			disable: false,
@@ -135,10 +136,9 @@ module.exports = {
 				exclude: /(node_modules|bower_components)/,
 				include: srcCodeDir + '/components'
 			},
-
 			{
 				test: /.html$/,
-				loader: 'file?name=[path][name]-[hash:20].[ext]',
+				loader: `file?name=[path][name]-[hash:20].[ext]!extract?publicPath=${publicPath}!html`,
 				exclude: /(node_modules|bower_components)/,
 				include: srcCodeDir + '/app'
 			},
