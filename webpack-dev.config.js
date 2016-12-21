@@ -85,7 +85,7 @@ module.exports = {
 
 			{
 				test: /.html$/,
-				loader: 'file?name=[path][name]-[hash:20].[ext]',
+				loader: 'file?name=[path][name]-[hash:20].[ext]!extract?publicPath=/!html',
 				exclude: /(node_modules|bower_components)/,
 				include: srcCodeDir + '/app'
 			},

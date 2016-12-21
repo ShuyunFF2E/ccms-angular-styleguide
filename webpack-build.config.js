@@ -68,13 +68,13 @@ module.exports = {
 			name: 'init',
 			chunks: ['app', 'lib']
 		}),
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	sourceMap: true,
-		// 	compress: {
-		// 		warnings: true
-		// 	},
-		// 	include: /\.min\.js$/
-		// }),
+		new webpack.optimize.UglifyJsPlugin({
+			sourceMap: true,
+			compress: {
+				warnings: true
+			},
+			include: /\.min\.js$/
+		}),
 		new ExtractTextPlugin({
 			filename: '[name]-[hash:20].min.css',
 			disable: false,
