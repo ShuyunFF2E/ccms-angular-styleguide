@@ -9,6 +9,8 @@ const HTMLPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const srcCodeDir = path.join(__dirname, 'src');
 const API_DOMAIN = '';
+const publicPath = '/';
+const genRules = require('./webpack-common.config');
 
 module.exports = {
 	devtool: 'source-map',
@@ -16,7 +18,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'build'),
 		filename: '[name].js',
-		publicPath: '/' // hot loader publish dir
+		publicPath // hot loader publish dir
 	},
 	externals: {
 		'angular': 'angular',
@@ -42,7 +44,7 @@ module.exports = {
 				env: 'develop',
 				context: srcCodeDir,
 				output: {
-					path: path.join(__dirname, '/')
+					path: path.join(__dirname, publicPath)
 				},
 				postcss: [autoprefixer({browsers: ['Chrome > 35', 'Firefox > 30', 'Safari > 7']})],
 				eslint: {
@@ -60,63 +62,6 @@ module.exports = {
 		moduleExtensions: ['-loader']
 	},
 	module: {
-
-		rules: [
-			{
-				test: /\.js$/,
-				loader: 'eslint',
-				enforce: 'pre',
-				exclude: /node_modules/,
-				include: [srcCodeDir]
-			},
-			{
-				test: /\.js?$/,
-				loaders: ['babel'],
-				exclude: /(node_modules|bower_components)/,
-				include: [srcCodeDir]
-			},
-			{
-				test: /\.tpl\.html$/,
-				loader: 'html',
-				query: {interpolate: true},
-				exclude: /(node_modules|bower_components)/,
-				include: srcCodeDir + '/components'
-			},
-
-			{
-				test: /.html$/,
-				loader: 'file?name=[path][name]-[hash:20].[ext]!extract?publicPath=/!html',
-				exclude: /(node_modules|bower_components)/,
-				include: srcCodeDir + '/app'
-			},
-			{
-				test: /\.(sc|c)ss$/,
-				loaders: ['style', 'css', 'postcss', 'resolve-url', 'sass?sourceMap'],
-				exclude: /(node_modules|bower_components)/
-			},
-			{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				loaders: [
-					'file?hash=sha512&digest=hex&name=[hash:20].[ext]'
-				]
-			},
-			{
-				test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-				loader: 'url?limit=10000&mimetype=application/font-woff&prefix=fonts'
-			},
-			{
-				test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-				loader: 'url?limit=10000&mimetype=application/octet-stream&prefix=fonts'
-			},
-			{
-				test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-				loader: 'url?limit=10000&mimetype=application/vnd.ms-fontobject&prefix=fonts'
-			},
-			{
-				test: /\.svg(#\w+)?$/,
-				loader: 'url?limit=15000&mimetype=image/svg+xml&prefix=fonts'
-			}
-
-		]
+		rules: genRules(srcCodeDir, publicPath, true)
 	}
 };

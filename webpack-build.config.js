@@ -11,6 +11,7 @@ const autoprefixer = require('autoprefixer');
 const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const genRules = require('./webpack-common.config');
 const cssnano = require('cssnano');
 const cssNanoCommonOpts = {
 	discardComments: {removeAll: true},
@@ -22,7 +23,7 @@ const cssNanoCommonOpts = {
 
 // 根据 build 变量获取应用信息及系统环境等信息
 const srcCodeDir = path.join(__dirname, 'src');
-const buildOutputDir = path.join(__dirname, 'dist');
+const buildOutputDir = path.join(__dirname, 'angular-styleguide');
 const packageInfo = require('./package.json');
 const packageName = packageInfo.name;
 const appName = packageName.substr(packageName.indexOf('ccms-') + 5);
@@ -41,7 +42,7 @@ module.exports = {
 	output: {
 		path: buildOutputDir,
 		filename: '[name]-[chunkhash:20].min.js',
-		publicPath: publicPath,
+		publicPath,
 		jsonpFunction: appName.split('-').join('') + 'Jsonp'
 	},
 	externals: {
@@ -114,64 +115,6 @@ module.exports = {
 		moduleExtensions: ['-loader']
 	},
 	module: {
-
-		rules: [
-			{
-				test: /\.js?$/,
-				loader: 'eslint',
-				enforce: 'pre',
-				exclude: /node_modules/,
-				include: srcCodeDir
-			},
-			{
-				test: /\.js?$/,
-				loaders: ['babel'],
-				exclude: /(node_modules|bower_components)/,
-				include: [srcCodeDir, path.join(__dirname, 'demo')]
-			},
-			{
-				test: /\.tpl\.html$/,
-				loader: 'html',
-				query: {interpolate: true},
-				exclude: /(node_modules|bower_components)/,
-				include: srcCodeDir + '/components'
-			},
-			{
-				test: /.html$/,
-				loader: `file?name=[path][name]-[hash:20].[ext]!extract?publicPath=${publicPath}!html`,
-				exclude: /(node_modules|bower_components)/,
-				include: srcCodeDir + '/app'
-			},
-			{
-				test: /\.(sc|c)ss$/,
-				loader: ExtractTextPlugin.extract({
-					notExtractLoader: 'style',
-					loader: 'css?-minimize!postcss!resolve-url!sass?sourceMap'
-				})
-			},
-			{
-				test: /\.(jpe?g|png|gif)$/i,
-				loaders: [
-					'file?hash=sha512&digest=hex&name=[hash:20].[ext]'
-				]
-			},
-			{
-				test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-				loader: 'url?limit=15000&mimetype=application/font-woff&prefix=fonts'
-			},
-			{
-				test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-				loader: 'url?limit=15000&mimetype=application/octet-stream&prefix=fonts'
-			},
-			{
-				test: /\.eot(\?#\w+)?$/,
-				loader: 'url?limit=15000&mimetype=application/vnd.ms-fontobject&prefix=fonts'
-			},
-			{
-				test: /\.svg(#\w+)?$/,
-				loader: 'url?limit=15000&mimetype=image/svg+xml&prefix=fonts'
-			}
-
-		]
+		rules: genRules(srcCodeDir, publicPath, false)
 	}
 };

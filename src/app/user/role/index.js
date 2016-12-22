@@ -7,7 +7,7 @@
 import angular from 'angular';
 
 import Router from './router';
-import './user-role.scss';
+import './_user-role.scss';
 
 userRoleRouter.$inject = ['$stateProvider'];
 function userRoleRouter($stateProvider) {
