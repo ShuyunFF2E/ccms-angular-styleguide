@@ -9,7 +9,8 @@
     "build:production": "webpack --config webpack-build.config.js --progress --env production",
     "lint": "NODE_EVN=test eslint src",
     "start": "node server.js",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "prepush": "npm run lint"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
